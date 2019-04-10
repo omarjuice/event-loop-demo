@@ -57,6 +57,7 @@ app.listen(3000, () => {
 
     // Make 20 CONCURRENT requests to a computationally expensive endpoint
     // IF only a single thread is available, this will block the event loop until all of these computations are finished.
+    // Meaning that our application can do NOTHING while this is running.
     // Executing these computations in a worker thread will not block the event loop.
     exec('ab -c 20 -n 20 http://localhost:3000/').then((result) => {
         clearInterval(interval)
