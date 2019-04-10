@@ -1,0 +1,18 @@
+{
+  "name": "advanced-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bm-single": "export NODE_ENV=single && node index.js",
+    "bm-worker": "export NODE_ENV=worker && node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^4.1.0",
+    "express": "^4.16.4",
+    "webworker-threads": "^0.7.17"
+  }
+}
