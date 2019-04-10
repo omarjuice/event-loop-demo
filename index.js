@@ -1,8 +1,8 @@
-process.env.UV_THREADPOOL_SIZE = 10
+process.env.UV_THREADPOOL_SIZE = 5
 const express = require('express');
 const crypto = require('crypto');
 const Worker = require('webworker-threads').Worker
-
+const fs = require('fs')
 const app = express();
 
 
@@ -34,11 +34,16 @@ app.get('/', async (req, res) => {
 
 })
 app.get('/fast', (req, res) => {
-    res.send('This was fast')
+    res.send('done')
 })
 app.get('/crypto', (req, res) => {
     crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', () => {
-        res.send('Hi There')
+        res.send('done')
+    })
+})
+app.get('/file', (req, res) => {
+    fs.readFile('index.js', () => {
+        res.send('done')
     })
 })
 app.listen(3000, () => {
@@ -63,7 +68,7 @@ app.listen(3000, () => {
         clearInterval(interval)
         console.log('COMPUTATION ', Date.now() - start);
         completedTasks++
-        if (completedTasks === 3) {
+        if (completedTasks === 4) {
             console.log('COMPLETED ALL TASKS')
         }
     }).catch((err) => {
@@ -74,7 +79,7 @@ app.listen(3000, () => {
     exec('ab -c 1 -n 1 http://localhost:3000/fast').then((result) => {
         console.log('NORMAL ', Date.now() - start);
         completedTasks++
-        if (completedTasks === 3) {
+        if (completedTasks === 4) {
             console.log('COMPLETED ALL TASKS')
         }
     }).catch((err) => {
@@ -86,7 +91,16 @@ app.listen(3000, () => {
     exec('ab -c 4 -n 4 http://localhost:3000/crypto').then((result) => {
         console.log('LIBUV ', Date.now() - start);
         completedTasks++
-        if (completedTasks === 3) {
+        if (completedTasks === 4) {
+            console.log('----------COMPLETED----------')
+        }
+    }).catch((err) => {
+        console.log(err)
+    });
+    exec('ab -c 2 -n 2 http://localhost:3000/file').then((result) => {
+        console.log('OS ', Date.now() - start);
+        completedTasks++
+        if (completedTasks === 4) {
             console.log('----------COMPLETED----------')
         }
     }).catch((err) => {
